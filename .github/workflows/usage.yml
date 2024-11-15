@@ -17,7 +17,7 @@ jobs:
         id: resumable-action
         with:
           csv-file: 'data/input.csv'
-          processing-script: './scripts/process_script.py'
+          processing-script: 'process_script.py'
           artifact-retention-days: '7'
 
       # Access the last processed index
