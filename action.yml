@@ -1,0 +1,76 @@
+name: 'CSV Processor with Resume'
+description: 'Process CSV files with automatic resume capability from last failed record'
+author: 'Your Name'
+
+branding:
+  icon: 'file-text'  # Choose from: https://feathericons.com/
+  color: 'blue'      # Options: white, yellow, blue, green, orange, red, purple, gray-dark
+
+inputs:
+  csv-file:
+    description: 'Path to the CSV file to process'
+    required: true
+  processing-script:
+    description: 'Path to your Python processing script'
+    required: true
+  start-index:
+    description: 'Index to start processing from (defaults to 0)'
+    required: false
+    default: '0'
+  artifact-retention-days:
+    description: 'Number of days to retain the checkpoint artifact'
+    required: false
+    default: '1'
+
+outputs:
+  last-processed:
+    description: 'Index of the last successfully processed record'
+    value: ${{ steps.process.outputs.last-processed }}  # Added value property
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Download last checkpoint
+      id: download-checkpoint
+      continue-on-error: true
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ github.action }}-${{ inputs.csv-file }}-checkpoint
+        path: ./checkpoint
+
+    - name: Read checkpoint
+      id: read-checkpoint
+      shell: bash
+      run: |
+        if [ -f "./checkpoint/last_processed.txt" ]; then
+          echo "LAST_PROCESSED=$(cat ./checkpoint/last_processed.txt)" >> $GITHUB_OUTPUT
+        else
+          echo "LAST_PROCESSED=${{ inputs.start-index }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Process CSV
+      id: process
+      shell: bash
+      run: |
+        # Run the user's processing script
+        python ${{ inputs.processing-script }} \
+          --csv-file "${{ inputs.csv-file }}" \
+          --start-index ${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}
+
+        # Save the current index
+        mkdir -p ./checkpoint
+        echo "${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}" > ./checkpoint/last_processed.txt
+        echo "last-processed=${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}" >> $GITHUB_OUTPUT
+
+    - name: Save checkpoint
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ github.action }}-${{ inputs.csv-file }}-checkpoint
+        path: ./checkpoint
+        retention-days: ${{ inputs.artifact-retention-days }}

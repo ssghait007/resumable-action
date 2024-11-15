@@ -1,0 +1,26 @@
+name: Process CSV Data
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/*.csv'
+
+jobs:
+  process-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Using the published action
+      - name: Process CSV File
+        uses: your-username/csv-processor@v1
+        id: csv-processor
+        with:
+          csv-file: 'data/input.csv'
+          processing-script: './scripts/process_script.py'
+          artifact-retention-days: '7'
+
+      # Access the last processed index
+      - name: Check Progress
+        run: |
+          echo "Last processed index: ${{ steps.csv-processor.outputs.last-processed }}"
