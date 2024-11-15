@@ -60,10 +60,6 @@ runs:
           echo "LAST_PROCESSED=${{ inputs.start-index }}" >> $GITHUB_OUTPUT
         fi
 
-    - name: Create checkpoint directory
-      shell: bash
-      run: mkdir -p ./checkpoint
-
     - name: Process CSV
       id: process
       shell: bash
@@ -76,6 +72,7 @@ runs:
         # Save and output the current index
         if [ -f "current_index.txt" ]; then
           current_index=$(cat current_index.txt)
+          mkdir -p ./checkpoint
           cp current_index.txt ./checkpoint/last_processed.txt
           echo "current_index=${current_index}" >> $GITHUB_OUTPUT
         else
