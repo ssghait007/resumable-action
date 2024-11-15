@@ -18,7 +18,7 @@ jobs:
         with:
           csv-file: 'sample.csv'
           processing-script: 'process_script.py'
-          artifact-retention-days: '7'
+          artifact-retention-days: 2
 
       # Access the last processed index
       - name: Check Progress
