@@ -41,7 +41,6 @@ runs:
       uses: actions/download-artifact@v3
       with:
         name: ${{ github.action }}-${{ inputs.csv-file }}-checkpoint
-        path: ./checkpoint
 
     - name: Test artifact download
       shell: bash
