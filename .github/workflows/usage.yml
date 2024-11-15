@@ -13,8 +13,8 @@ jobs:
 
       # Using the published action
       - name: Process CSV File
-        uses: your-username/csv-processor@v1
-        id: csv-processor
+        uses: ssghait007/resumable-action@v1
+        id: resumable-action
         with:
           csv-file: 'data/input.csv'
           processing-script: './scripts/process_script.py'
@@ -23,4 +23,4 @@ jobs:
       # Access the last processed index
       - name: Check Progress
         run: |
-          echo "Last processed index: ${{ steps.csv-processor.outputs.last-processed }}"
+          echo "Last processed index: ${{ steps.resumable-action.outputs.last-processed }}"
