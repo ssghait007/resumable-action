@@ -60,6 +60,10 @@ runs:
           echo "LAST_PROCESSED=${{ inputs.start-index }}" >> $GITHUB_OUTPUT
         fi
 
+    - name: Create checkpoint directory
+      shell: bash
+      run: mkdir -p ./checkpoint
+
     - name: Process CSV
       id: process
       shell: bash
