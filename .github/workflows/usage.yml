@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'data/*.csv'
+      - '*.csv'
 
 jobs:
   process-data:
@@ -16,7 +16,7 @@ jobs:
         uses: ssghait007/resumable-action@v1
         id: resumable-action
         with:
-          csv-file: 'data/sample.csv'
+          csv-file: 'sample.csv'
           processing-script: 'process_script.py'
           artifact-retention-days: '7'
 
