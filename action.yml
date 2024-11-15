@@ -38,7 +38,7 @@ runs:
     - name: Download last checkpoint
       id: download-checkpoint
       continue-on-error: true
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ github.action }}-${{ inputs.csv-file }}-checkpoint
 
