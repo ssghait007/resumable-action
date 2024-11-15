@@ -46,7 +46,8 @@ runs:
     - name: Test artifact download
       shell: bash
       run: |
-        ls -R
+        pwd
+        ls -R ./checkpoint
 
     - name: Read checkpoint
       id: read-checkpoint
