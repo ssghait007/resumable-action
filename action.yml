@@ -47,7 +47,7 @@ runs:
       shell: bash
       run: |
         pwd
-        ls -R ./checkpoint
+        ls -R
 
     - name: Read checkpoint
       id: read-checkpoint
