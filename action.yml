@@ -58,15 +58,22 @@ runs:
       id: process
       shell: bash
       run: |
-        # Run the user's processing script
-        python ${{ inputs.processing-script }} \
+        # Run the processing script
+        python ${{ github.action_path }}/process_script.py \
           --csv-file "${{ inputs.csv-file }}" \
           --start-index ${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}
 
-        # Save the current index
-        mkdir -p ./checkpoint
-        echo "${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}" > ./checkpoint/last_processed.txt
-        echo "last-processed=${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}" >> $GITHUB_OUTPUT
+        # Save and output the current index
+        if [ -f "current_index.txt" ]; then
+          current_index=$(cat current_index.txt)
+          cp current_index.txt ./checkpoint/last_processed.txt
+          echo "current_index=${current_index}" >> $GITHUB_OUTPUT
+        else
+          echo "Warning: current_index.txt not found"
+          current_index=${{ steps.read-checkpoint.outputs.LAST_PROCESSED }}
+          echo "${current_index}" > ./checkpoint/last_processed.txt
+          echo "current_index=${current_index}" >> $GITHUB_OUTPUT
+        fi
 
     - name: Save checkpoint
       if: always()
