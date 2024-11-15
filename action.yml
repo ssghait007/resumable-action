@@ -43,6 +43,11 @@ runs:
         name: ${{ github.action }}-${{ inputs.csv-file }}-checkpoint
         path: ./checkpoint
 
+    - name: Test artifact download
+      shell: bash
+      run: |
+        ls -R
+
     - name: Read checkpoint
       id: read-checkpoint
       continue-on-error: true
