@@ -13,7 +13,7 @@ jobs:
 
       # Using the published action
       - name: Process CSV File
-        uses: ssghait007/resumable-action@v4
+        uses: ssghait007/resumable-action@v5
         id: resumable-action
         with:
           csv-file: 'sample.csv'
