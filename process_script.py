@@ -22,8 +22,8 @@ def main():
         reader = csv.DictReader(file)
         records = list(reader)
 
-        # Process records starting from the specified index
-        for i, record in enumerate(records[args.start_index:], start=args.start_index):
+        # Process half of the records starting from the specified index
+        for i, record in enumerate(records[args.start_index:args.start_index + len(records)//2], start=args.start_index):
             try:
                 process_record(record)
                 # Save current progress
